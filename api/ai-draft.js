@@ -1,14 +1,12 @@
 // api/ai-draft.js
-// POST /api/enquiries/:id/ai-draft
-// Uses Google Gemini (free tier) to generate a personalised reply draft for Blessing or Mo to review
+// POST /api/enquiries/:id/ai-draft — generate reply draft using Gemini free API
 
 const { getEnquiry } = require('../lib/db');
 
 async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const id      = req.params.id;
-  const enquiry = getEnquiry(id);
+  const enquiry = await getEnquiry(req.params.id);
   if (!enquiry) return res.status(404).json({ error: 'Enquiry not found' });
 
   const apiKey = process.env.GEMINI_API_KEY;
@@ -46,19 +44,17 @@ Their message: ${enquiry.message}`;
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
       console.error('Gemini API error:', err);
-      return res.status(502).json({ error: 'Gemini API request failed — check GEMINI_API_KEY in Render environment variables' });
+      return res.status(502).json({ error: 'Gemini API request failed — check GEMINI_API_KEY' });
     }
 
     const data  = await response.json();
     const draft = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
     if (!draft) return res.status(502).json({ error: 'Gemini returned an empty response' });
 
     res.json({ draft });
-
   } catch (err) {
     console.error('AI draft error:', err.message);
-    res.status(500).json({ error: 'AI draft failed — check GEMINI_API_KEY in Render environment variables' });
+    res.status(500).json({ error: 'AI draft failed — check GEMINI_API_KEY in Render' });
   }
 }
 

@@ -1,11 +1,11 @@
 // api/stats.js
-// GET /api/stats — totals for the CRM dashboard header
+// GET /api/stats
 
 const { getStats } = require('../lib/db');
 
 async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-  res.json(getStats());
+  res.json(await getStats());
 }
 
 module.exports = handler;
