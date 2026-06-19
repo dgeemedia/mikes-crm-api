@@ -1,4 +1,4 @@
-// api/enquiries.js
+// mikes-crm-api/api/enquiries.js
 // GET /api/enquiries — filtered list for CRM dashboard
 
 const { listEnquiries } = require('../lib/db');

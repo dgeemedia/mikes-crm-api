@@ -1,4 +1,4 @@
-// server.js
+// mikes-crm-api/server.js
 require('dotenv').config();
 const express = require('express');
 const cors    = require('cors');
@@ -37,14 +37,16 @@ function requireAuth(req, res, next) {
 app.post('/api/enquiry',            require('./api/enquiry'));
 app.post('/api/webhooks/calendly',  require('./api/calendly-webhook'));
 
-const auth = require('./api/auth');
+const auth          = require('./api/auth');
+const enquiryDetail = require('./api/enquiry-detail');
+
 app.post('/api/login', auth.login);
 
 // ── Protected routes ──────────────────────────────────────────────────────────
 app.get('/api/stats',                       requireAuth, require('./api/stats'));
 app.get('/api/enquiries',                   requireAuth, require('./api/enquiries'));
-app.get('/api/enquiries/:id',               requireAuth, require('./api/enquiry-detail'));
-app.patch('/api/enquiries/:id/status',      requireAuth, require('./api/enquiry-detail'));
+app.get('/api/enquiries/:id',               requireAuth, enquiryDetail.getDetail);
+app.patch('/api/enquiries/:id/status',      requireAuth, enquiryDetail.patchStatus);
 app.post('/api/enquiries/:id/reply',        requireAuth, require('./api/reply'));
 app.post('/api/enquiries/:id/ai-draft',     requireAuth, require('./api/ai-draft'));
 app.get('/api/bookings',                    requireAuth, require('./api/bookings'));

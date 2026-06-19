@@ -1,4 +1,4 @@
-// api/enquiry.js
+// mikes-crm-api/api/enquiry.js
 // POST /api/enquiry — receives contact form submission from the website
 
 const { saveEnquiry, saveReply } = require('../lib/db');
