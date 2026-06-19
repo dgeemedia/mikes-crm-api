@@ -4,3 +4,7 @@ enquiries.db
 *.db-journal
 node_modules/
 node_modules/
+
+.env.example
+SETUP.md
+updated-main.js
